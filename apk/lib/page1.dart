@@ -18,7 +18,7 @@ class _LoginState extends State<Home> {
         "Confirm123",
       );
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/dashboard/daftar_kelas',);
+      Navigator.pushReplacementNamed(context, '/dashboard/class',);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Login failed: $e")),

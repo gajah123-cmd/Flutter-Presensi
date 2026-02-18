@@ -1,6 +1,9 @@
+import 'package:apk/dashboard/add_person.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'page1.dart';
+import '/dashboard/class.dart';
+import '/dashboard/announcement.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +28,9 @@ class MyApp extends StatelessWidget {
       
       routes: {
         '/page1': (context) => const Home(),
+        '/dashboard/class': (context) => const DaftarKelas(),
+        '/dashboard/announcement': (context) => const Pengumuman(),
+        '/dashboard/add_person': (context) => const TambahPengguna(),
        },
       
     );
