@@ -1,9 +1,9 @@
-import 'package:apk/dashboard/add_person.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'page1.dart';
 import '/dashboard/class.dart';
 import '/dashboard/announcement.dart';
+import 'package:apk/dashboard/add_person.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

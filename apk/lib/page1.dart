@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'auth_service.dart';
+import 'Services/auth_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,7 +21,7 @@ class _LoginState extends State<Home> {
       Navigator.pushReplacementNamed(context, '/dashboard/class',);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login failed: $e")),
+        SnackBar(content: Text("Terjadi Error")),
       );
     }
   }
