@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:apk/widget.dart';
+import '../funtion/read_siswa.dart';
 
 class TambahPengguna extends StatefulWidget {
   const TambahPengguna({super.key});
@@ -17,51 +18,100 @@ class _TambahPenggunaState extends State<TambahPengguna> {
       appBar: AppBar(
         title: const Text('Tambah Pengguna'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-          elevation: 4,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(18),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DialogTambahSiswa(),
-                ),
-              );
-            },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Color(0xFFE3ECFF),
-                    child: Icon(
-                      Icons.person_add_alt_1,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Text(
-                      "Tambahkan Akun Murid",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Icon(Icons.arrow_forward_ios, size: 18),
-                ],
+body: Padding(
+  padding: const EdgeInsets.all(20),
+  child: Column(
+    children: [
+      Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        elevation: 4,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DialogTambahSiswa(),
               ),
+            );
+          },
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Color(0xFFE3ECFF),
+                  child: Icon(
+                    Icons.person_add_alt_1,
+                    color: Colors.blue,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    "Tambahkan Akun Murid",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, size: 18),
+              ],
             ),
           ),
         ),
       ),
+
+      const SizedBox(height: 20),
+
+      Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        elevation: 4,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DaftarSiswaPage(),
+              ),
+            );
+          },
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: Color(0xFFE8F5E9),
+                  child: Icon(
+                    Icons.list_alt,
+                    color: Colors.green,
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    "Melihat Daftar Siswa",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Icon(Icons.arrow_forward_ios, size: 18),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
     );
   }
 }

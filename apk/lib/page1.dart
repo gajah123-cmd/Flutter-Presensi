@@ -55,7 +55,7 @@ class _LoginState extends State<Home> {
                     ),
                   ),
                   child: const Text(
-                    'Login',
+                    'Masuk',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.white,
