@@ -26,19 +26,48 @@ class BottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
+      type: BottomNavigationBarType.fixed,
+      //selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.blueGrey,
       currentIndex: selectedIndex,
       onTap: (index) => _onItemTapped(context, index),
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.school_outlined),
+        icon: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+             borderRadius: BorderRadius.circular(10),
+             color: selectedIndex == 0 ?  Colors.blue : Colors.transparent,
+            ),
+            child: Icon(Icons.school_outlined,
+            color: selectedIndex == 0 ? Colors.white : Colors.blueGrey,),
+          ),
           label: 'Daftar Kelas',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.notifications_outlined),
+        icon: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+             borderRadius: BorderRadius.circular(10),
+             color: selectedIndex == 1 ? Colors.blue : Colors.transparent,
+            ),
+            child: Icon(Icons.notifications_outlined,
+            color: selectedIndex == 1 ? Colors.white : Colors.blueGrey,),
+          ),
           label: 'Pengumuman',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_add_alt_1_outlined),
+        icon: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+             borderRadius: BorderRadius.circular(10),
+             color: selectedIndex == 2 ? Colors.blue : Colors.transparent,
+            ),
+            child: Icon(Icons.person_add_alt_1_outlined,
+            color: selectedIndex == 2 ? Colors.white : Colors.blueGrey,),
+          ),
           label: 'Tambah',
         ),
       ],
