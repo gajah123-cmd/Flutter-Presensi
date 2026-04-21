@@ -5,7 +5,10 @@ import '/dashboard/class.dart';
 import '/dashboard/announcement.dart';
 import 'package:apk/dashboard/add_person.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '/load_screen/main_screen.dart';
+import '/load_screen/login_screen.dart';
+import '/load_screen/signup_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,20 +20,25 @@ Future<void> main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  runApp(const MyApp());
+  final prefs = await SharedPreferences.getInstance();
+  final String? userEmail = prefs.getString('user_email');
+
+  runApp(MyApp(isLoggedIn: userEmail != null));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
-
       return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Home(),
+      home: isLoggedIn ? const Home() : const LoginAdmin(),
       
       routes: {
+        '/load_screen/login_screen': (context) => const LoginAdmin(),
+        '/load_screen/signup_screen': (context) => const SignupAdmin(),
         '/page1': (context) => const Home(),
         '/load_screen': (context) => const MainScreen(),
         '/dashboard/class': (context) => const DaftarKelas(),

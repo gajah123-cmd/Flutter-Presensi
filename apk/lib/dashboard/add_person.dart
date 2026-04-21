@@ -3,6 +3,7 @@ import 'package:apk/function/f_murid/form_murid.dart';
 import 'package:flutter/material.dart';
 //import 'package:apk/function/bottom_nav.dart';
 import 'package:apk/function/custom_button.dart';
+import 'package:apk/function/f_murid/get_murid.dart';
 
 class TambahPengguna extends StatefulWidget {
   const TambahPengguna({super.key});
@@ -83,7 +84,7 @@ class _TambahPenggunaState extends State<TambahPengguna> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const FormSiswaPage()),
+                      MaterialPageRoute(builder: (context) => const FormMuridPage()),
                     );                   
                   },
                 ),
@@ -194,10 +195,10 @@ class _TambahPenggunaState extends State<TambahPengguna> {
                         ),
                         iconPosition: IconPosition.left,
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const DaftarMurid()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MuridPage()),
+                      );
                     },
                   ),
                    CustomCard(

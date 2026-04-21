@@ -1,90 +1,159 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final supabase = Supabase.instance.client;
+class MuridService {
+  final supabase = Supabase.instance.client;
 
-class Murid {
-  final num nis;
-  final DateTime? createdAt;
-  final String nama;
-  final num idClass;
-  final String? gender;
-  final DateTime? tanggalLahir;
-  final String? alamat;
-  final String? orangTua;
-  final num? noTele;
-
-  Murid({
-    required this.nis,
-    this.createdAt,
-    required this.nama,
-    required this.idClass,
-    this.gender,
-    this.tanggalLahir,
-    this.alamat,
-    this.orangTua,
-    this.noTele,
-  });
-
-  factory Murid.fromJson(Map<String, dynamic> json) {
-    return Murid(
-      nis: json['nis'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      nama: json['nama'],
-      idClass: json['id_class'],
-      gender: json['gender'],
-      tanggalLahir: json['tanggal_lahir'] != null
-          ? DateTime.parse(json['tanggal_lahir'])
-          : null,
-      alamat: json['alamat'],
-      orangTua: json['orang_tua'],
-      noTele: json['no_tele'],
-    );
+  String get userId {
+    final id = supabase.auth.currentUser?.id;
+    if (id == null) {
+      throw Exception('User belum login');
+    }
+    return id;
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'nis': nis,
-      'nama': nama,
-      'id_class': idClass,
-      'gender': gender,
-      'tanggal_lahir': tanggalLahir?.toIso8601String(),
-      'alamat': alamat,
-      'orang_tua': orangTua,
-      'no_tele': noTele,
-    };
+  // ===============================
+  // 🔹 GET DATA MURID
+  // ===============================
+  Future<List<Map<String, dynamic>>> getMurid() async {
+    try {
+      final res = await supabase
+          .from('murid')
+          .select('''
+            id_tabel,
+            nis,
+            nama,
+            id_class,
+            gender,
+            tanggal_lahir,
+            alamat,
+            orang_tua,
+            no_tele,
+            created_at,
+            class_name (
+              id_class,
+              name_class
+            )
+          ''')
+          .eq('user_id', userId)
+          .order('nis', ascending: true);
+
+      return List<Map<String, dynamic>>.from(res);
+    } catch (e) {
+      if (kDebugMode) {
+        print('GET MURID ERROR: $e');
+      }
+      return [];
+    }
   }
-}
 
-Future<void> insertMurid(Murid murid) async {
-  await supabase.from('murid').insert({
-    ...murid.toJson(),
-    // created_at otomatis dari DB
-  });
-}
+  // ===============================
+  // 🔹 GET DATA KELAS
+  // ===============================
+  Future<List<Map<String, dynamic>>> getKelas() async {
+    try {
+      final res = await supabase
+          .from('class_name')
+          .select('id_class, name_class')
+          .order('id_class', ascending: true);
 
-Future<List<Murid>> getMurid() async {
-  final response = await supabase
-      .from('murid')
-      .select()
-      .order('created_at', ascending: false);
+      return List<Map<String, dynamic>>.from(res);
+    } catch (e) {
+      if (kDebugMode) {
+        print('GET KELAS ERROR: $e');
+      }
+      return [];
+    }
+  }
 
-  return (response as List)
-      .map((e) => Murid.fromJson(e))
-      .toList();
-}
+  // ===============================
+  // 🔹 INSERT DATA MURID
+  // ===============================
+  Future<void> addMurid({
+    required int nis,
+    required String nama,
+    required int idClass,
+    String? gender,
+    DateTime? tanggalLahir,
+    String? alamat,
+    String? orangTua,
+    int? noTele,
+  }) async {
+    try {
+      await supabase.from('murid').insert({
+        'user_id': userId,
+        'nis': nis,
+        'nama': nama,
+        'id_class': idClass,
+        'gender': gender,
+        'tanggal_lahir': tanggalLahir?.toIso8601String().split('T').first,
+        'alamat': alamat,
+        'orang_tua': orangTua,
+        'no_tele': noTele,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('ADD MURID ERROR: $e');
+      }
+      throw Exception(e);
+    }
+  }
 
-Future<void> updateMurid(Murid murid) async {
-  await supabase
-      .from('murid')
-      .update(murid.toJson())
-      .eq('nis', murid.nis);
-}
+  // ===============================
+  // 🔹 UPDATE DATA MURID
+  // pakai primary key id_tabel
+  // ===============================
+  Future<void> updateMurid({
+    required String idTabel,
+    required int nis,
+    required String nama,
+    required int idClass,
+    String? gender,
+    DateTime? tanggalLahir,
+    String? alamat,
+    String? orangTua,
+    int? noTele,
+  }) async {
+    try {
+      await supabase
+          .from('murid')
+          .update({
+            'nis': nis,
+            'nama': nama,
+            'id_class': idClass,
+            'gender': gender,
+            'tanggal_lahir':
+                tanggalLahir?.toIso8601String().split('T').first,
+            'alamat': alamat,
+            'orang_tua': orangTua,
+            'no_tele': noTele,
+          })
+          .eq('id_tabel', idTabel)
+          .eq('user_id', userId);
+    } catch (e) {
+      if (kDebugMode) {
+        print('UPDATE MURID ERROR: $e');
+      }
+      throw Exception(e);
+    }
+  }
 
-Future<void> deleteMurid(num nis) async {
-  await supabase
-      .from('murid')
-      .delete()
-      .eq('nis', nis);
+  // ===============================
+  // 🔹 DELETE DATA MURID
+  // pakai primary key id_tabel
+  // ===============================
+  Future<void> deleteMurid(String idTabel) async {
+    try {
+      await supabase
+          .from('murid')
+          .delete()
+          .eq('id_tabel', idTabel)
+          .eq('user_id', userId);
+    } catch (e) {
+      if (kDebugMode) {
+        print('DELETE MURID ERROR: $e');
+      }
+      throw Exception(e);
+    }
+  }
 }

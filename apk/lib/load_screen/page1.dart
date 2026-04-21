@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '/database/auth.dart';
 import 'package:apk/load_screen/main_screen.dart';
 
 class Home extends StatefulWidget {
@@ -11,32 +9,14 @@ class Home extends StatefulWidget {
 }
 
 class _LoginState extends State<Home> {
-  final _auth = AuthService();
 
-void _login() async {
-  try {
-    await _auth.signIn(
-      "mypresence026@gmail.com",
-      "Confirm123",
-    );
-
-    if (!mounted) return;
-
+  void _login() {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const MainScreen()),
       (route) => false,
     );
-  } catch (e) {
-    if (kDebugMode) {
-      print("LOGIN ERROR: $e");
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(e.toString())),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
