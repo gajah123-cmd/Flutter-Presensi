@@ -147,75 +147,205 @@ class _SignupAdminState extends State<SignupAdmin> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 28),
+        padding: const EdgeInsets.symmetric(horizontal: 60),
         children: [
           const SizedBox(height: 70),
+ 
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2563EB),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.school_outlined,
+                      color: Colors.white,
+                      size: 42,
+                    ),
+                  ),
+                ),
+
+          const SizedBox(height: 28),
 
           const Text(
-            "Daftar Admin",
+            "Daftar Akun Admin",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 8),
+
+                const Text(
+                  "Silakan masukkan kredensial Anda",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Color(0xFF94A3B8),
+                  ),
+                ),
+
+                const SizedBox(height: 55),
+
+                                // EMAIL
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Email",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF334155),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 10),
 
           /// EMAIL
-          TextField(
-            controller: emailController,
-            decoration: InputDecoration(
-              hintText: "Email",
-              filled: true,
-              fillColor: const Color(0xFFF1F5F9),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-          ),
+                TextField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    hintText: "Masukkan Email",
+                    hintStyle: const TextStyle(
+                      color: Color(0xFFC4C4C4),
+                    ),
+                    filled: true,
+                    fillColor: const Color(0xFFF1F5F9),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                      ),
+                    ),
+                  ),
+                ),
 
-          const SizedBox(height: 20),
+                const SizedBox(height: 22),
 
-          /// PASSWORD
-          TextField(
-            controller: passwordController,
-            obscureText: isHidden,
-            decoration: InputDecoration(
-              hintText: "Password",
-              filled: true,
-              fillColor: const Color(0xFFF1F5F9),
-              suffixIcon: IconButton(
-                icon: Icon(isHidden
-                    ? Icons.visibility
-                    : Icons.visibility_off),
-                onPressed: () {
-                  setState(() => isHidden = !isHidden);
-                },
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-            ),
-          ),
+                               // PASSWORD
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Kata Sandi",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF334155),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+               TextField(
+                  controller: passwordController,
+                  obscureText: isHidden,
+                  decoration: InputDecoration(
+                    hintText: "Masukkan kata sandi",
+                    hintStyle: const TextStyle(
+                      color: Color(0xFFC4C4C4),
+                    ),
+                    filled: true,
+                    fillColor: const Color(0xFFF1F5F9),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        isHidden
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: const Color(0xFF94A3B8),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isHidden = !isHidden;
+                        });
+                      },
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                      ),
+                    ),
+                  ),
+                ),
 
           /// OTP FIELD
           if (isOtpSent) ...[
-            const SizedBox(height: 20),
-            TextField(
-              controller: otpController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: "Masukkan OTP",
-                filled: true,
-                fillColor: const Color(0xFFF1F5F9),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(16),
+            const SizedBox(height: 22),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Kode OTP",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF334155),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
 
+            const SizedBox(height: 10),
+
+                TextField(
+                  controller: otpController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: "Masukkan OTP",
+                    hintStyle: const TextStyle(
+                      color: Color(0xFFC4C4C4),
+                    ),
+                    filled: true,
+                    fillColor: const Color(0xFFF1F5F9),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(
+                        color: Color(0xFFE2E8F0),
+                      ),
+                    ),
+                  ),
+                ),
             const SizedBox(height: 10),
 
             Text(
               "Waktu: ${formatTime(secondsLeft)}",
-              style: const TextStyle(color: Colors.red),
+              style: const TextStyle(color: Color(0xFF94A3B8)),
             ),
           ],
 
@@ -223,8 +353,17 @@ class _SignupAdminState extends State<SignupAdmin> {
 
           /// BUTTON
           SizedBox(
-            height: 55,
+            width: double.infinity,
+            height: 58,
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF16A34A),
+                elevation: 8,
+                shadowColor: Colors.green.withOpacity(0.35),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
               onPressed: isLoading
                   ? null
                   : isOtpSent
@@ -232,11 +371,17 @@ class _SignupAdminState extends State<SignupAdmin> {
                       : sendOtp,
               child: isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
-                  : Text(isOtpSent ? "Verifikasi" : "Daftar"),
+                  : Text(isOtpSent ? "Verifikasi" : "Daftar",
+                  style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+            ),
             ),
           ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 24),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

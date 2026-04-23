@@ -14,16 +14,29 @@ class _PengumumanState extends State<Pengumuman> {
     return Scaffold(
      // bottomNavigationBar: const BottomNav(selectedIndex: 1),
       appBar: AppBar(
-        toolbarHeight: 64,
+        //toolbarHeight: 100,
+        titleSpacing: 20,
         title: const Text('Pengumuman Sekolah'),
         titleTextStyle: const TextStyle(
           fontFamily: 'Inter',
-          fontSize: 18,
+          fontSize: 16,
           fontWeight: FontWeight.w700,
           color: Colors.white,
         ),
         backgroundColor: Color(0xFF2563EB),
         elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              icon: const Icon(Icons.refresh, 
+              color: Colors.white),
+              onPressed: () {
+                setState(() {});
+              },
+            ),
+          ),
+        ],
       ),
       body: const Center(
         child: Text('Halaman '),

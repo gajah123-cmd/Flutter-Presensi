@@ -6,7 +6,7 @@ class TimeHelper {
   }
 
   static String getTime() {
-    return DateFormat('HH:mm:ss').format(DateTime.now());
+    return DateFormat('HH:mm').format(DateTime.now());
   }
 
   static String getDate() {

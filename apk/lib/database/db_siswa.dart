@@ -30,8 +30,8 @@ class MuridService {
             orang_tua,
             no_tele,
             created_at,
-            class_name (
-              id_class,
+            class_name!murid_id_class_fkey (
+              id_tabel,
               name_class
             )
           ''')
@@ -43,7 +43,7 @@ class MuridService {
       if (kDebugMode) {
         print('GET MURID ERROR: $e');
       }
-      return [];
+      throw Exception('Gagal memuat data murid: $e');
     }
   }
 
@@ -54,8 +54,8 @@ class MuridService {
     try {
       final res = await supabase
           .from('class_name')
-          .select('id_class, name_class')
-          .order('id_class', ascending: true);
+          .select('id_tabel, name_class')
+          .order('name_class', ascending: true);
 
       return List<Map<String, dynamic>>.from(res);
     } catch (e) {
@@ -70,14 +70,14 @@ class MuridService {
   // 🔹 INSERT DATA MURID
   // ===============================
   Future<void> addMurid({
-    required int nis,
+    required num nis,
     required String nama,
-    required int idClass,
+    String? idClass,
     String? gender,
     DateTime? tanggalLahir,
     String? alamat,
     String? orangTua,
-    int? noTele,
+    num? noTele,
   }) async {
     try {
       await supabase.from('murid').insert({
@@ -105,14 +105,14 @@ class MuridService {
   // ===============================
   Future<void> updateMurid({
     required String idTabel,
-    required int nis,
+    required num nis,
     required String nama,
-    required int idClass,
+    String? idClass,
     String? gender,
     DateTime? tanggalLahir,
     String? alamat,
     String? orangTua,
-    int? noTele,
+    num? noTele,
   }) async {
     try {
       await supabase

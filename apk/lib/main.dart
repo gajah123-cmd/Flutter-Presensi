@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
       return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: isLoggedIn ? const Home() : const LoginAdmin(),
+      home: const Home(),
       
       routes: {
         '/load_screen/login_screen': (context) => const LoginAdmin(),

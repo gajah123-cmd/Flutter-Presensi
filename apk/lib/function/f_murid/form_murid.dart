@@ -18,7 +18,7 @@ class _FormMuridPageState extends State<FormMuridPage> {
   final noTeleController = TextEditingController();
 
   List<Map<String, dynamic>> kelasList = [];
-  int? selectedClass;
+  String? selectedClass;
   String? selectedGender;
   DateTime? selectedDate;
 
@@ -66,14 +66,14 @@ class _FormMuridPageState extends State<FormMuridPage> {
 
     try {
       await service.addMurid(
-        nis: int.parse(nisController.text),
+        nis: num.parse(nisController.text),
         nama: namaController.text,
-        idClass: selectedClass!,
+        idClass: selectedClass,
         gender: selectedGender,
         tanggalLahir: selectedDate,
         alamat: alamatController.text,
         orangTua: orangTuaController.text,
-        noTele: int.tryParse(noTeleController.text),
+        noTele: num.tryParse(noTeleController.text),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -251,7 +251,7 @@ body: Padding(
       // Kelas
       const Text("Kelas"),
       const SizedBox(height: 6),
-      DropdownButtonFormField<int>(
+      DropdownButtonFormField<String>(
         value: selectedClass,
         hint: const Text("Pilih Kelas"),
         decoration: InputDecoration(
@@ -264,8 +264,8 @@ body: Padding(
           ),
         ),
         items: kelasList.map((kelas) {
-          return DropdownMenuItem<int>(
-            value: kelas['id_class'],
+          return DropdownMenuItem<String>(
+            value: kelas['id_tabel'],
             child: Text(kelas['name_class']),
           );
         }).toList(),

@@ -22,6 +22,7 @@ class _DetailMuridPageState extends State<DetailMuridPage> {
 
   bool edit = false;
 
+  late TextEditingController nisC;
   late TextEditingController namaC;
   late TextEditingController genderC;
   late TextEditingController tglC;
@@ -30,12 +31,13 @@ class _DetailMuridPageState extends State<DetailMuridPage> {
   late TextEditingController teleC;
 
   List<Map<String, dynamic>> kelasList = [];
-  int? selectedKelas;
+  String? selectedKelas;
 
   @override
   void initState() {
     super.initState();
 
+    nisC = TextEditingController(text: widget.data['nis']?.toString() ?? "");
     namaC = TextEditingController(text: widget.data['nama'] ?? "");
     genderC = TextEditingController(text: widget.data['gender'] ?? "");
     tglC = TextEditingController(
@@ -60,15 +62,15 @@ class _DetailMuridPageState extends State<DetailMuridPage> {
   Future<void> updateData() async {
     await service.updateMurid(
       idTabel: widget.data['id_tabel'], // 🔥 pakai PK baru
-      nis: widget.data['nis'],
+      nis: num.tryParse(nisC.text) ?? 0,
       nama: namaC.text,
-      idClass: selectedKelas!,
+      idClass: selectedKelas,
       gender: genderC.text,
       tanggalLahir:
           tglC.text.isEmpty ? null : DateTime.tryParse(tglC.text),
       alamat: alamatC.text,
       orangTua: ortuC.text,
-      noTele: int.tryParse(teleC.text),
+      noTele: num.tryParse(teleC.text),
     );
 
     if (!mounted) return;
@@ -109,12 +111,12 @@ class _DetailMuridPageState extends State<DetailMuridPage> {
       );
     }
 
-    return DropdownButtonFormField<int>(
+    return DropdownButtonFormField<String>(
       value: selectedKelas,
       decoration: const InputDecoration(labelText: "Kelas"),
       items: kelasList.map((e) {
-        return DropdownMenuItem<int>(
-          value: e['id_class'],
+        return DropdownMenuItem<String>(
+          value: e['id_tabel'],
           child: Text(e['name_class']),
         );
       }).toList(),
@@ -124,6 +126,7 @@ class _DetailMuridPageState extends State<DetailMuridPage> {
 
   @override
   void dispose() {
+    nisC.dispose();
     namaC.dispose();
     genderC.dispose();
     tglC.dispose();
@@ -143,8 +146,7 @@ class _DetailMuridPageState extends State<DetailMuridPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Text("NIS : ${widget.data['nis']}"),
-            const SizedBox(height: 12),
+            field("NIS", nisC),
 
             field("Nama", namaC),
             field("Gender", genderC),

@@ -1,11 +1,9 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   final supabase = Supabase.instance.client;
 
-  /// ===============================
-  /// SIGNUP + EMAIL CONFIRM
-  /// ===============================
   Future<AuthResponse> signUp(
     String email,
     String password,
@@ -17,9 +15,6 @@ class AuthService {
     );
   }
 
-  /// ===============================
-  /// LOGIN
-  /// ===============================
   Future<AuthResponse> signIn(
     String email,
     String password,
@@ -30,9 +25,6 @@ class AuthService {
     );
   }
 
-  /// ===============================
-  /// INSERT USER ADMIN
-  /// ===============================
   Future<void> insertUser({
     required String id,
     required String email,
@@ -46,9 +38,6 @@ class AuthService {
     });
   }
 
-  /// ===============================
-  /// GET PROFIL
-  /// ===============================
   Future<Map<String, dynamic>?> getProfile() async {
     final userId = supabase.auth.currentUser?.id;
 
@@ -63,9 +52,6 @@ class AuthService {
     return data;
   }
 
-  /// ===============================
-  /// UPDATE PROFIL
-  /// ===============================
   Future<void> updateProfile({
     required String name,
     required String nomorInduk,
@@ -78,16 +64,12 @@ class AuthService {
     }).eq('id', userId!);
   }
 
-  /// ===============================
-  /// LOGOUT
-  /// ===============================
   Future<void> signOut() async {
     await supabase.auth.signOut();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('user_email');
   }
 
-  /// ===============================
-/// VERIFY OTP
-/// ===============================
 Future<AuthResponse> verifyOtp(
   String email,
   String otp,
@@ -99,9 +81,6 @@ Future<AuthResponse> verifyOtp(
   );
 }
 
-/// ===============================
-/// DELETE USER PUBLIC
-/// ===============================
 Future<void> deleteUserPublic(String email) async {
   await supabase
       .from('user_admin')

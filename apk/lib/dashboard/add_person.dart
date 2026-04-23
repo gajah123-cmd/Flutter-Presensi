@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 //import 'package:apk/function/bottom_nav.dart';
 import 'package:apk/function/custom_button.dart';
 import 'package:apk/function/f_murid/get_murid.dart';
+import 'package:apk/function/f_guru/form_guru.dart';
+import 'package:apk/function/f_guru/get_guru.dart';
+import 'package:apk/function/f_kelas/form_kelas..dart';
+import 'package:apk/function/user_admin/profil.dart';
 
 class TambahPengguna extends StatefulWidget {
   const TambahPengguna({super.key});
@@ -18,6 +22,7 @@ class _TambahPenggunaState extends State<TambahPengguna> {
     return Scaffold(
       //bottomNavigationBar: const BottomNav(selectedIndex: 2),
       appBar: AppBar(
+        titleSpacing: 20,
         title: Column(
           //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -35,6 +40,17 @@ class _TambahPenggunaState extends State<TambahPengguna> {
         backgroundColor: Color(0xFF2563EB),
         elevation: 0,
         automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              icon: const Icon(Icons.refresh, color: Colors.white),
+              onPressed: () {
+                setState(() {});
+              },
+            ),
+          ),
+        ],
       ),
 
       body: Column(
@@ -43,7 +59,8 @@ class _TambahPenggunaState extends State<TambahPengguna> {
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Column(
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
                   CustomCard(
                   width: 350,
@@ -124,7 +141,12 @@ class _TambahPenggunaState extends State<TambahPengguna> {
                         borderRadius: BorderRadius.circular(12),
                        ),
                         iconPosition: IconPosition.left,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const FormGuruPage()),
+                    );
+                  },
                 ),
                 CustomCard(
                   width: 350,
@@ -162,7 +184,12 @@ class _TambahPenggunaState extends State<TambahPengguna> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                        iconPosition: IconPosition.left,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const FormKelasPage()),
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 30),
@@ -220,12 +247,34 @@ class _TambahPenggunaState extends State<TambahPengguna> {
                         ),
                         iconPosition: IconPosition.left,
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => const DaftarMurid()),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const GuruPage()),
+                      );
                     },
-                  ),                    
+                  ),
+                  CustomCard(
+                    width: 180,
+                    height: 60,
+                    title: "Profil Admin",
+                    backgroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 7),
+                    borderColor: Colors.lightBlue,
+                    titleStyle: const TextStyle(
+                      fontFamily: "Inter",
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Color.fromARGB(255, 56, 59, 238),
+                    ),
+                    customIcon: const Icon(Icons.manage_accounts, color: Color(0xFF2563EB), size: 36),
+                    iconPosition: IconPosition.left,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfilScreen()),
+                      );
+                    },
+                  ),
               ],
             ),
           ),
