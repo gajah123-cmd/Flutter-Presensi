@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:apk/database/auth.dart';
+import 'package:apk/database/storage/image_profile.dart';
 import 'package:apk/load_screen/page1.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({super.key});
@@ -11,6 +14,7 @@ class ProfilScreen extends StatefulWidget {
 
 class _ProfilScreenState extends State<ProfilScreen> {
   final AuthService _authService = AuthService();
+  final ImageProfileStorage _storageService = ImageProfileStorage();
   
   final nameController = TextEditingController();
   final nomorIndukController = TextEditingController();
@@ -19,6 +23,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   bool isLoading = true;
   bool isSaving = false;
+  String? _avatarUrl;
 
   @override
   void initState() {
@@ -28,6 +33,12 @@ class _ProfilScreenState extends State<ProfilScreen> {
 
   Future<void> _loadProfile() async {
     final data = await _authService.getProfile();
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    String? loadedAvatarUrl;
+    if (userId != null) {
+      loadedAvatarUrl = await _storageService.getProfileImageUrl(userId);
+    }
+    
     if (mounted) {
       setState(() {
         if (data != null) {
@@ -36,6 +47,11 @@ class _ProfilScreenState extends State<ProfilScreen> {
           emailController.text = data['email'] ?? '';
           roleController.text = data['role'] ?? '';
         }
+        
+        if (loadedAvatarUrl != null) {
+          _avatarUrl = loadedAvatarUrl;
+        }
+        
         isLoading = false;
       });
     }
@@ -64,6 +80,107 @@ class _ProfilScreenState extends State<ProfilScreen> {
         setState(() => isSaving = false);
       }
     }
+  }
+
+  Future<void> _uploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) return;
+
+    setState(() => isLoading = true);
+    try {
+      final bytes = await pickedFile.readAsBytes();
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw 'User belum login';
+      
+      final newUrl = await _storageService.uploadProfileImage(userId, bytes);
+      
+      setState(() {
+        _avatarUrl = newUrl;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Foto profil berhasil diperbarui')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal mengupload foto: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
+  }
+
+  Future<void> _deleteImage() async {
+    setState(() => isLoading = true);
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw 'User belum login';
+      
+      await _storageService.deleteProfileImage(userId);
+          
+      setState(() {
+        _avatarUrl = null;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Foto profil berhasil dihapus')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal menghapus foto: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
+  }
+
+  void _showEditProfileSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library, color: Color(0xFF2563EB)),
+                title: const Text('Upload foto dari galeri'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _uploadImage();
+                },
+              ),
+              if (_avatarUrl != null)
+                ListTile(
+                  leading: const Icon(Icons.delete, color: Colors.red),
+                  title: const Text('Hapus foto profil', style: TextStyle(color: Colors.red)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    _deleteImage();
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _logout() async {
@@ -96,10 +213,38 @@ class _ProfilScreenState extends State<ProfilScreen> {
           : ListView(
               padding: const EdgeInsets.all(20),
               children: [
-                const CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Color(0xFF2563EB),
-                  child: Icon(Icons.person, size: 50, color: Colors.white),
+                Center(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundColor: const Color(0xFF2563EB),
+                        backgroundImage: _avatarUrl != null ? NetworkImage(_avatarUrl!) : null,
+                        onBackgroundImageError: _avatarUrl != null
+                            ? (exception, stackTrace) {
+                                if (mounted) {
+                                  setState(() {
+                                    _avatarUrl = null;
+                                  });
+                                }
+                              }
+                            : null,
+                        child: _avatarUrl == null ? const Icon(Icons.person, size: 50, color: Colors.white) : null,
+                      ),
+                      const SizedBox(height: 8),
+                      TextButton.icon(
+                        onPressed: _showEditProfileSheet,
+                        icon: const Icon(Icons.edit, size: 16, color: Color(0xFF2563EB)),
+                        label: const Text(
+                          'Edit Profil',
+                          style: TextStyle(
+                            color: Color(0xFF2563EB),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 24),
                 const Text('Email (Read Only)'),
