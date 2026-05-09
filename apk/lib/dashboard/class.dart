@@ -12,10 +12,9 @@ class DaftarKelas extends StatefulWidget {
 }
 
 class _DaftarKelasState extends State<DaftarKelas> {
-  final List<int> kelasList = [1, 2, 3, 4, 5, 6];
   List<Map<String, dynamic>> allData = [];
-  int? expandedId;
   bool isLoading = true;
+  String? searchQuery;
 
   @override
   void initState() {
@@ -26,107 +25,307 @@ class _DaftarKelasState extends State<DaftarKelas> {
   Future<void> fetchData() async {
     try {
       final res = await ClassService.getClasses();
+
+      if (!mounted) return;
+
       setState(() {
-        allData = res;
+        allData = res ?? [];
         isLoading = false;
       });
     } catch (e) {
       if (kDebugMode) print(e);
-      setState(() => isLoading = false);
+
+      if (!mounted) return;
+
+      setState(() {
+        isLoading = false;
+      });
     }
+  }
+
+  String _safe(dynamic value) {
+    if (value == null || value.toString().isEmpty) return "-";
+    return value.toString();
+  }
+
+  String _waliName(Map<String, dynamic> item) {
+    final guruData = item['guru'];
+
+    if (guruData is List && guruData.isNotEmpty) {
+      final waliGuru = guruData.firstWhere(
+        (g) => g is Map && g['wali'] == true,
+        orElse: () => null,
+      );
+
+      if (waliGuru != null) {
+        return waliGuru['name']?.toString() ?? "-";
+      }
+
+      return guruData.first['name']?.toString() ?? "-";
+    }
+
+    return "-";
+  }
+
+  List<Map<String, dynamic>> get _filteredData {
+    final query = (searchQuery ?? "").toLowerCase();
+
+    if (query.isEmpty) return allData;
+
+    return allData.where((item) {
+      final name = _safe(item['name_class']).toLowerCase();
+      final wali = _waliName(item).toLowerCase();
+      final tahun = _safe(item['tahun']).toLowerCase();
+
+      return name.contains(query) ||
+          wali.contains(query) ||
+          tahun.contains(query);
+    }).toList();
+  }
+
+  int _muridCount(Map<String, dynamic> item) {
+    final muridData = item['murid'];
+    if (muridData is List) return muridData.length;
+    return 0;
+  }
+
+  Color _levelColor(int level) {
+    switch (level) {
+      case 1:
+        return const Color(0xFF2563EB);
+      case 2:
+        return const Color(0xFF059669);
+      case 3:
+        return const Color(0xFF7C3AED);
+      case 4:
+        return const Color(0xFFDC2626);
+      case 5:
+        return const Color(0xFFEA580C);
+      case 6:
+        return const Color(0xFF0891B2);
+      default:
+        return const Color(0xFF64748B);
+    }
+  }
+
+  Color _softLevelColor(int level) {
+    switch (level) {
+      case 1:
+        return const Color(0xFFDBEAFE);
+      case 2:
+        return const Color(0xFFD1FAE5);
+      case 3:
+        return const Color(0xFFEDE9FE);
+      case 4:
+        return const Color(0xFFFEE2E2);
+      case 5:
+        return const Color(0xFFFFEDD5);
+      case 6:
+        return const Color(0xFFCFFAFE);
+      default:
+        return const Color(0xFFF1F5F9);
+    }
+  }
+
+  Widget _levelBadge(int level) {
+    final color = _levelColor(level);
+    return Container(
+      width: 50,
+      height: 50,
+      decoration: BoxDecoration(
+        color: _softLevelColor(level),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.25), width: 1),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.school_outlined, color: color, size: 18),
+          const SizedBox(height: 2),
+          Text(
+            level == 7 ? "LAIN" : "KLS $level",
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _classCard(Map<String, dynamic> item) {
+    final level = int.tryParse(item['id_class']?.toString() ?? "") ?? 7;
+    final nameClass = _safe(item['name_class']);
+    final wali = _waliName(item);
+    final tahun = _safe(item['tahun']);
+    final muridCount = _muridCount(item);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: SizedBox(
+        height: 100,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            CustomCard(
+              title: "",
+              showIcon: false,
+              height: 100,
+              backgroundColor: Colors.white,
+              borderColor: const Color(0xFFE8EEF6),
+              borderWidth: 1,
+              borderRadius: 14,
+              margin: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ContentKelas(classData: item),
+                  ),
+                );
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  _levelBadge(level),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          nameClass,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Wali: $wali",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF64748B),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            const Icon(Icons.groups_2_outlined, size: 14),
+                            const SizedBox(width: 4),
+                            Text("$muridCount murid",
+                                style: const TextStyle(fontSize: 12)),
+                            const SizedBox(width: 10),
+                            const Icon(Icons.calendar_month_outlined, size: 14),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                tahun,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right, size: 20, color: Color(0xFFCBD5E1)),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Pengaman jika allData somehow null
     final dataCount = allData.length;
+    final visibleData = _filteredData;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F7FB),
+
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color(0xFF2563EB),
+        automaticallyImplyLeading: false,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(0),
           child: Container(
-            color: const Color(0xFF2563EB),
             height: 45,
             width: double.infinity,
+            color: const Color(0xFF2563EB),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
                         "Daftar Kelas",
                         style: TextStyle(
-                          fontFamily: "Inter",
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
+                      const SizedBox(height: 4),
+                      Text(
                         "$dataCount kelas terdaftar",
                         style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 11,
                           color: Colors.white70,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: IconButton(
-                    icon: const Icon(Icons.refresh, color: Colors.white),
-                    onPressed: () {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      fetchData();
-                    },
+                    ],
                   ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.refresh, color: Colors.white),
+                  onPressed: () {
+                    setState(() => isLoading = true);
+                    fetchData();
+                  },
                 ),
               ],
             ),
           ),
         ),
-        elevation: 0,
-        backgroundColor: const Color(0xFF2563EB),
-        automaticallyImplyLeading: false,
       ),
 
       body: Column(
         children: [
+          // SEARCH BAR
           Container(
             height: 80,
-            decoration: const BoxDecoration(
-              color: Color(0xFF2563EB),
-            ),
+            color: const Color(0xFF2563EB),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
                   onChanged: (value) {
-                    if (kDebugMode) {
-                      print("Search: $value");
-                    }
+                    setState(() => searchQuery = value);
                   },
                   decoration: InputDecoration(
                     hintText: "Cari kelas atau wali kelas...",
                     hintStyle: const TextStyle(
-                      fontFamily: 'Inter',
                       fontSize: 14,
-                      fontWeight: FontWeight.w400,
                       color: Color(0xFFCCCCCC),
                     ),
                     filled: true,
@@ -135,6 +334,7 @@ class _DaftarKelasState extends State<DaftarKelas> {
                       horizontal: 16,
                       vertical: 12,
                     ),
+                    prefixIcon: const Icon(Icons.search, size: 18),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -147,81 +347,30 @@ class _DaftarKelasState extends State<DaftarKelas> {
 
           const SizedBox(height: 8),
 
+          // LIST
           Expanded(
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    itemCount: kelasList.length + 1,
-                    itemBuilder: (context, index) {
-                      final isLainLain = index == kelasList.length;
-                      final id = isLainLain ? 7 : kelasList[index];
-                      final title = isLainLain ? 'Lain-lain' : 'Kelas $id';
-                      
-                      // Sangat preventif
-                      final List<Map<String, dynamic>> thisLevelClasses = allData.where((e) {
-                        return e['id_class'] == id;
-                      }).toList();
-
-                      return Column(
-                        children: [
-                          CustomCard(
-                            title: title,
-                            borderColor: const Color(0xFFDBEAFE),
-                            backgroundColor: const Color(0xFFEFF6FF),
-                            height: 95,
-                            width: double.maxFinite,
-                            alignment: Alignment.center,
-                            onTap: () {
-                              setState(() {
-                                expandedId = expandedId == id ? null : id;
-                              });
+                : RefreshIndicator(
+                    onRefresh: fetchData,
+                    child: visibleData.isEmpty
+                        ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height * 0.5,
+                                child: const Center(child: Text("Belum ada kelas")),
+                              ),
+                            ],
+                          )
+                        : ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.only(top: 10, bottom: 20),
+                            itemCount: visibleData.length,
+                            itemBuilder: (context, index) {
+                              return _classCard(visibleData[index]);
                             },
                           ),
-                          if (expandedId == id && thisLevelClasses.isEmpty)
-                            const Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Text("Belum ada kelas di tingkat ini", style: TextStyle(color: Colors.grey)),
-                            ),
-                          if (expandedId == id && thisLevelClasses.isNotEmpty)
-                            ...thisLevelClasses.map((item) {
-                              final nameClass = item['name_class']?.toString() ?? 'Tanpa Nama';
-                              
-                              String guruName = '-';
-                              if (item['guru'] is List) {
-                                final List gurus = item['guru'] as List;
-                                final waliGuru = gurus.firstWhere((g) => g['wali'] == true, orElse: () => null);
-                                if (waliGuru != null) {
-                                  guruName = waliGuru['name']?.toString() ?? '-';
-                                }
-                              }
-
-                              final tahun = item['tahun']?.toString() ?? '-';
-
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                                child: Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                  child: ListTile(
-                                    title: Text(nameClass, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    subtitle: Text("Wali: $guruName | Tahun: $tahun"),
-                                    trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ContentKelas(classData: item),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            }),
-                        ],
-                      );
-                    },
                   ),
           ),
         ],

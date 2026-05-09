@@ -104,7 +104,7 @@ class _FormKelasPageState extends State<FormKelasPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: ListView(
           children: [
             // Nama Kelas
@@ -114,12 +114,17 @@ class _FormKelasPageState extends State<FormKelasPage> {
               controller: nameClassController,
               decoration: InputDecoration(
                 hintText: "Contoh: Kelas 1A",
+                hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
                 filled: true,
-                fillColor: Colors.grey[200],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                fillColor: const Color(0xFFF1F5F9),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
             ),
@@ -133,11 +138,15 @@ class _FormKelasPageState extends State<FormKelasPage> {
               hint: const Text("Pilih Tingkat / Lain-lain"),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.grey[200],
+                fillColor: const Color(0xFFF1F5F9),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
               items: [
@@ -164,12 +173,17 @@ class _FormKelasPageState extends State<FormKelasPage> {
               controller: tahunController,
               decoration: InputDecoration(
                 hintText: "Contoh: 2023/2024",
+                hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
                 filled: true,
-                fillColor: Colors.grey[200],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                fillColor: const Color(0xFFF1F5F9),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
             ),

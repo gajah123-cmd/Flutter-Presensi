@@ -45,11 +45,7 @@ class _GuruPageState extends State<GuruPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Daftar Guru"),
-        backgroundColor: const Color(0xFF2563EB),
-        foregroundColor: Colors.white,
-      ),
+      appBar: AppBar(title: const Text("Manajemen Guru")),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : errorMessage != null
@@ -74,44 +70,65 @@ class _GuruPageState extends State<GuruPage> {
                         ),
                       ),
                     )
-                  : ListView.builder(
-                      itemCount: guruList.length,
-                      itemBuilder: (context, index) {
-                        final g = guruList[index];
-                        final isWali = g['wali'] == true;
-                        String subtitle = "NIK: ${safe(g['nik'])}";
-                        
-                        if (isWali) {
-                          final className = g['class_name']?['name_class'] ?? 'Tanpa Kelas';
-                          subtitle += "\nWali Kelas: $className";
-                        } else if (g['bidang'] != null && g['bidang'].toString().isNotEmpty) {
-                          subtitle += "\nBidang: ${g['bidang']}";
-                        }
+                  : Column(
+                      children: [
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: guruList.length,
+                            itemBuilder: (context, index) {
+                              final g = guruList[index];
+                              final nama = safe(g['name']);
+                              final nik = safe(g['nik']);
+                              final isWali = g['wali'] == true;
+                              final kelas = g['class_name']?['name_class'] ??
+                                  'Belum ada kelas';
+                              final bidang = safe(g['bidang']);
+                              final detail = isWali
+                                  ? 'Wali Kelas: $kelas'
+                                  : 'Bidang: $bidang';
 
-                        return CustomCard(
-                          title: "${safe(g['name'])}",
-                          subtitle: subtitle,
-                          customIcon: Image.asset(
-                            'lib/asset/icons/h_hat.png',
-                            width: 35,
-                            height: 35,
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 0,
+                                    ),
+                                    child: CustomCard(
+                                      title: nama,
+                                      subtitle: 'NIK: $nik\n$detail',
+                                      iconPosition: IconPosition.left,
+                                      icon: Icons.person,
+                                      iconColor: const Color(0xFF2563EB),
+                                      iconDecoration: BoxDecoration(
+                                        color: const Color(0xFFEFF6FF),
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                      ),
+                                      backgroundColor: Colors.white,
+                                      borderColor: Colors.transparent,
+                                      borderWidth: 0,
+                                      margin: EdgeInsets.zero,
+                                      onTap: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                DetailGuruPage(data: g),
+                                          ),
+                                        );
+                                        loadData();
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                              );
+                            },
                           ),
-                          iconDecoration: BoxDecoration(
-                            color: Colors.greenAccent[100],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          iconPosition: IconPosition.left,
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => DetailGuruPage(data: g),
-                              ),
-                            );
-                            loadData();
-                          },
-                        );
-                      },
+                        ),
+                      ],
                     ),
     );
   }

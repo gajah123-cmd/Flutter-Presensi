@@ -125,7 +125,7 @@ class _FormMuridPageState extends State<FormMuridPage> {
       ),
       
 body: Padding(
-  padding: const EdgeInsets.all(0),
+  padding: const EdgeInsets.all(24),
   child: ListView(
     children: [
 
@@ -137,12 +137,17 @@ body: Padding(
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: "Masukkan Nomor Induk Siswa",
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
       ),
@@ -156,12 +161,17 @@ body: Padding(
         controller: namaController,
         decoration: InputDecoration(
           hintText: "Nama lengkap sesuai akta",
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
       ),
@@ -175,12 +185,17 @@ body: Padding(
         value: selectedGender,
         hint: const Text("Pilih Jenis Kelamin"),
         decoration: InputDecoration(
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
         items: const [
@@ -202,12 +217,17 @@ body: Padding(
       TextField(
         decoration: InputDecoration(
           hintText: "Kota/Kabupaten kelahiran",
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
       ),
@@ -221,12 +241,17 @@ body: Padding(
         onTap: pickDate,
         child: InputDecorator(
           decoration: InputDecoration(
+            hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
             filled: true,
-            fillColor: Colors.grey[200],
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            fillColor: const Color(0xFFF1F5F9),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
             ),
           ),
           child: Row(
@@ -255,12 +280,17 @@ body: Padding(
         value: selectedClass,
         hint: const Text("Pilih Kelas"),
         decoration: InputDecoration(
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
         items: kelasList.map((kelas) {
@@ -285,12 +315,17 @@ body: Padding(
         controller: alamatController,
         decoration: InputDecoration(
           hintText: "Masukkan alamat",
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
       ),
@@ -304,12 +339,17 @@ body: Padding(
         controller: orangTuaController,
         decoration: InputDecoration(
           hintText: "Nama orang tua",
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
       ),
@@ -324,12 +364,17 @@ body: Padding(
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: "Masukkan nomor telepon",
+          hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
           filled: true,
-          fillColor: Colors.grey[200],
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          fillColor: const Color(0xFFF1F5F9),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
           ),
         ),
       ),

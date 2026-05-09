@@ -54,7 +54,7 @@ class _MuridPageState extends State<MuridPage> {
           : errorMessage != null
               ? Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
                       "Terjadi Kesalahan:\n$errorMessage",
                       textAlign: TextAlign.center,
@@ -73,38 +73,62 @@ class _MuridPageState extends State<MuridPage> {
                         ),
                       ),
                     )
-                  : ListView.builder(
-              itemCount: muridList.length,
-              itemBuilder: (context, index) {
-                final m = muridList[index];
+                  : Column(
+                      children: [
+                        const SizedBox(height: 12),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: muridList.length,
+                            itemBuilder: (context, index) {
+                              final m = muridList[index];
+                              final nama = safe(m['nama']);
+                              final nis = safe(m['nis']);
+                              final kelas =
+                                  m['class_name']?['name_class'] ??
+                                      'Belum ada kelas';
 
-                return CustomCard(
-                  title: "${safe(m['nama'])}",
-                  subtitle: "NIS: ${safe(m['nis'])}",
-                  customIcon: Image.asset(
-                    'lib/asset/icons/b_people.png',
-                    width: 35,
-                    height: 35,
-                  ),
-                  iconDecoration: BoxDecoration(
-                    color: Colors.lightBlueAccent[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  iconPosition: IconPosition.left,
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => DetailMuridPage(data: m),
-                      ),
-                    );
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+                                    child: CustomCard(
+                                      title: nama,
+                                      subtitle: 'NIS: $nis\nKelas: $kelas',
+                                      iconPosition: IconPosition.left,
+                                      icon: Icons.person,
+                                      iconColor: const Color(0xFF2563EB),
+                                      iconDecoration: BoxDecoration(
+                                        color: const Color(0xFFEFF6FF),
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                      ),
+                                      backgroundColor: Colors.white,
+                                      borderColor: Colors.transparent,
+                                      borderWidth: 0,
+                                      margin: EdgeInsets.zero,
+                                      //padding: const EdgeInsets.all(20),
+                                      onTap: () async {
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                DetailMuridPage(data: m),
+                                          ),
+                                        );
 
-                    // refresh setelah balik
-                    loadData();
-                  },
-                );
-              },
-            ),
+                                        // refresh setelah balik
+                                        loadData();
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:apk/database/db_kelas.dart';
+import 'package:apk/function/custom_button.dart';
+import 'package:apk/function/f_kelas/update_kelas.dart';
 
 class ContentKelas extends StatefulWidget {
   final Map<String, dynamic> classData;
@@ -28,8 +30,8 @@ class _ContentKelasState extends State<ContentKelas> {
       final resGuru = await ClassService.getGuruByClass(classId);
       
       setState(() {
-        muridList = resMurid;
-        guruList = resGuru;
+        muridList = resMurid ?? [];
+        guruList = resGuru ?? [];
         isLoading = false;
       });
     } catch (e) {
@@ -55,62 +57,53 @@ class _ContentKelasState extends State<ContentKelas> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Detail $nameClass"),
         backgroundColor: const Color(0xFF2563EB),
         foregroundColor: Colors.white,
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Color(0xFF2563EB),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(24),
-                bottomRight: Radius.circular(24),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  nameClass,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    const Icon(Icons.person, color: Colors.white70, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      "Wali Kelas: $guruName",
-                      style: const TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today, color: Colors.white70, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      "Tahun Ajaran: ${widget.classData['tahun'] ?? '-'}",
-                      style: const TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        elevation: 0,
+        title: Text(
+          nameClass,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
-          Expanded(
-            child: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ListView(
+        ),
+        actions: [
+          Row(
+            children: [
+              const Icon(Icons.calendar_today, color: Colors.white, size: 16),
+              const SizedBox(width: 6),
+              Text(
+                widget.classData['tahun'] ?? '-',
+                style: const TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit, color: Colors.white, size: 20),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UpdateKelasPage(classData: widget.classData),
+                    ),
+                  ).then((result) {
+                    if (result != null && result is Map<String, dynamic>) {
+                      setState(() {
+                        widget.classData['name_class'] = result['name_class'];
+                        widget.classData['id_class'] = result['id_class'];
+                        widget.classData['tahun'] = result['tahun'];
+                      });
+                    }
+                    loadData(); // Refresh data after returning
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
                     padding: const EdgeInsets.only(bottom: 20),
                     children: [
                       // --- BAGIAN GURU ---
@@ -131,26 +124,23 @@ class _ContentKelasState extends State<ContentKelas> {
                         ),
                         ...guruList.map((g) {
                           final isWali = g['wali'] == true;
-                          return Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              leading: CircleAvatar(
-                                backgroundColor: isWali ? Colors.green[100] : Colors.blue[50],
-                                child: Icon(
-                                  Icons.person,
-                                  color: isWali ? Colors.green[700] : Colors.blue[700],
-                                ),
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                            child: CustomCard(
+                              title: g['name'] ?? 'Tanpa Nama',
+                              subtitle: isWali ? "Wali Kelas" : "Guru Mapel: ${g['bidang'] ?? '-'}",
+                              iconPosition: IconPosition.left,
+                              icon: Icons.person,
+                              iconColor: isWali ? Colors.green[700]! : const Color(0xFF2563EB),
+                              iconDecoration: BoxDecoration(
+                                color: isWali ? Colors.green[100] : const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              title: Text(
-                                g['name'] ?? 'Tanpa Nama',
-                                style: const TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                              subtitle: Text(isWali ? "Wali Kelas" : "Guru Mapel: ${g['bidang'] ?? '-'}"),
+                              backgroundColor: Colors.white,
+                              borderColor: Colors.transparent,
+                              borderWidth: 0,
+                              margin: EdgeInsets.zero,
+                              onTap: () {},
                             ),
                           );
                         }),
@@ -182,38 +172,39 @@ class _ContentKelasState extends State<ContentKelas> {
                           ),
                         )
                       else
-                        ...muridList.map((m) {
-                          return Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              leading: CircleAvatar(
-                                backgroundColor: const Color(0xFFEFF6FF),
-                                child: Text(
-                                  (m['nama'] ?? '?').toString().substring(0, 1).toUpperCase(),
-                                  style: const TextStyle(
-                                    color: Color(0xFF2563EB),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        GridView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisExtent: 80, // Tinggi tetap (fixed height)
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
+                          itemCount: muridList.length,
+                          itemBuilder: (context, index) {
+                            final m = muridList[index];
+                            return CustomCard(
+                              title: m['nama'] ?? 'Tanpa Nama',
+                              subtitle: "NIS: ${m['nis'] ?? '-'}",
+                              iconPosition: IconPosition.left,
+                              icon: Icons.person,
+                              iconColor: const Color(0xFF2563EB),
+                              iconDecoration: BoxDecoration(
+                                color: const Color(0xFFEFF6FF),
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              title: Text(
-                                m['nama'] ?? 'Tanpa Nama',
-                                style: const TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                              subtitle: Text("NIS: ${m['nis'] ?? '-'}"),
-                            ),
-                          );
-                        }),
+                              backgroundColor: Colors.white,
+                              borderColor: Colors.transparent,
+                              borderWidth: 0,
+                              margin: EdgeInsets.zero,
+                              onTap: () {},
+                            );
+                          },
+                        ),
                     ],
                   ),
-          ),
-        ],
-      ),
     );
   }
 }

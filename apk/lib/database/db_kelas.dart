@@ -11,7 +11,11 @@ class ClassService {
     try {
       final response = await supabase
           .from('class_name')
-          .select('*, guru!guru_id_class_fkey(name, wali)')
+          .select('''
+            *,
+            guru!guru_id_class_fkey(name, wali),
+            murid!murid_id_class_fkey(id_tabel)
+          ''')
           .eq('user_id', userId)
           .order('id_class');
       return List<Map<String, dynamic>>.from(response);
@@ -85,5 +89,91 @@ class ClassService {
       if (idMurid != null) 'id_murid': idMurid,
       if (tahun != null) 'tahun': tahun,
     });
+  }
+
+  static Future<void> updateKelas({
+    required String idTabel,
+    required num idClass,
+    required String nameClass,
+    String? tahun,
+  }) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception("User not logged in");
+
+    await supabase.from('class_name').update({
+      'id_class': idClass,
+      'name_class': nameClass,
+      'tahun': tahun, // can be null to clear
+    }).eq('id_tabel', idTabel).eq('user_id', userId);
+  }
+
+  static Future<void> deleteKelas(String idTabel) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception("User not logged in");
+
+    // Remove relationships first: set id_class to null for guru and murid
+    await supabase.from('guru').update({'id_class': null, 'wali': false}).eq('id_class', idTabel).eq('user_id', userId);
+    await supabase.from('murid').update({'id_class': null}).eq('id_class', idTabel).eq('user_id', userId);
+
+    // Then delete the class
+    await supabase.from('class_name').delete().eq('id_tabel', idTabel).eq('user_id', userId);
+  }
+
+  static Future<List<Map<String, dynamic>>> getGuruUnassigned() async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return [];
+    final response = await supabase
+        .from('guru')
+        .select('id_tabel, nik, name, bidang')
+        .filter('id_class', 'is', null)
+        .eq('user_id', userId)
+        .order('name');
+    return List<Map<String, dynamic>>.from(response);
+  }
+
+  static Future<List<Map<String, dynamic>>> getMuridUnassigned() async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return [];
+    final response = await supabase
+        .from('murid')
+        .select('id_tabel, nis, nama, gender')
+        .filter('id_class', 'is', null)
+        .eq('user_id', userId)
+        .order('nama');
+    return List<Map<String, dynamic>>.from(response);
+  }
+
+  static Future<void> assignGuruToClass(String idGuru, String idTabelClass, {bool isWali = false}) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception("User not logged in");
+    await supabase.from('guru').update({
+      'id_class': idTabelClass,
+      'wali': isWali,
+    }).eq('id_tabel', idGuru).eq('user_id', userId);
+  }
+
+  static Future<void> removeGuruFromClass(String idGuru) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception("User not logged in");
+    await supabase.from('guru').update({
+      'id_class': null,
+      'wali': false,
+    }).eq('id_tabel', idGuru).eq('user_id', userId);
+  }
+
+  static Future<void> assignMuridToClass(String idMurid, String idTabelClass) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception("User not logged in");
+    await supabase.from('murid').update({
+      'id_class': idTabelClass,
+    }).eq('id_tabel', idMurid).eq('user_id', userId);
+  }
+
+  static Future<void> removeMuridFromClass(String idMurid) async {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception("User not logged in");
+    await supabase.from('murid').update({
+      'id_class': null,
+    }).eq('id_tabel', idMurid).eq('user_id', userId);
   }
 }

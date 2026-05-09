@@ -1,5 +1,7 @@
 import 'package:apk/function/bottom_nav.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:apk/function/f_tutup_app/closed.dart';
 import '../dashboard/class.dart';
 import '../dashboard/announcement.dart';
 import '../dashboard/add_person.dart';
@@ -28,15 +30,25 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: pages,
-      ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        final bool shouldPop = await handleDoubleTapToExit(context);
+        if (shouldPop) {
+          SystemNavigator.pop();
+        }
+      },
+      child: Scaffold(
+        body: IndexedStack(
+          index: selectedIndex,
+          children: pages,
+        ),
 
-      bottomNavigationBar: BottomNav(
-        selectedIndex: selectedIndex,
-        onTap: onItemTapped,
+        bottomNavigationBar: BottomNav(
+          selectedIndex: selectedIndex,
+          onTap: onItemTapped,
+        ),
       ),
     );
   }

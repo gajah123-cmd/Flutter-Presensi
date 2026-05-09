@@ -8,6 +8,7 @@ import 'package:apk/function/f_guru/form_guru.dart';
 import 'package:apk/function/f_guru/get_guru.dart';
 import 'package:apk/function/f_kelas/form_kelas..dart';
 import 'package:apk/function/user_admin/profil.dart';
+import 'package:apk/function/f_alat/form_alat.dart';
 
 class TambahPengguna extends StatefulWidget {
   const TambahPengguna({super.key});
@@ -203,77 +204,116 @@ class _TambahPenggunaState extends State<TambahPengguna> {
 
                 const SizedBox(height: 15),
 
-                  CustomCard(
-                    width: 180,
-                    height: 60,
-                    title: "Daftar Murid",
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 7,),
-                    borderColor: Colors.lightBlue,
-                    titleStyle: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color.fromARGB(255, 56, 59, 238),
-                    ),
-                    customIcon: Image.asset('lib/asset/icons/a_note.png',
-                          width: 40,
-                          height: 40,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            CustomCard(
+                              width: 180,
+                              height: 60,
+                              margin: const EdgeInsets.only(bottom: 16),
+                              title: "Daftar Murid",
+                              backgroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 7),
+                              borderColor: Colors.lightBlue,
+                              titleStyle: const TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(255, 56, 59, 238),
+                              ),
+                              customIcon: Image.asset('lib/asset/icons/a_note.png',
+                                width: 40,
+                                height: 40,
+                              ),
+                              iconPosition: IconPosition.left,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const MuridPage()),
+                                );
+                              },
+                            ),
+                            CustomCard(
+                              width: 180,
+                              height: 60,
+                              margin: const EdgeInsets.only(bottom: 16),
+                              title: "Daftar Guru",
+                              backgroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 7),
+                              borderColor: Colors.lightBlue,
+                              titleStyle: const TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(255, 56, 59, 238),
+                              ),
+                              customIcon: Image.asset('lib/asset/icons/a_note.png',
+                                width: 40,
+                                height: 40,
+                              ),
+                              iconPosition: IconPosition.left,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const GuruPage()),
+                                );
+                              },
+                            ),
+                            CustomCard(
+                              width: 180,
+                              height: 60,
+                              margin: EdgeInsets.zero,
+                              title: "Profil Admin",
+                              backgroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 7),
+                              borderColor: Colors.lightBlue,
+                              titleStyle: const TextStyle(
+                                fontFamily: "Inter",
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(255, 56, 59, 238),
+                              ),
+                              customIcon: const Icon(Icons.manage_accounts, color: Color(0xFF2563EB), size: 36),
+                              iconPosition: IconPosition.left,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const ProfilScreen()),
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        iconPosition: IconPosition.left,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MuridPage()),
-                      );
-                    },
-                  ),
-                   CustomCard(
-                    width: 180,
-                    height: 60,
-                    title: "Daftar Guru",
-                    backgroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 7,),
-                    borderColor: Colors.lightBlue,
-                    titleStyle: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color.fromARGB(255, 56, 59, 238),
-                    ),
-                    customIcon: Image.asset('lib/asset/icons/a_note.png',
-                          width: 40,
-                          height: 40,
+                        const SizedBox(width: 16),
+                        CustomCard(
+                          width: 154,
+                          height: 212,
+                          margin: EdgeInsets.zero,
+                          title: "Daftar Alat\n\nTerhubung\n\nAktif",
+                          backgroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 7),
+                          borderColor: Colors.lightBlue,
+                          titleStyle: const TextStyle(
+                            fontFamily: "Inter",
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromARGB(255, 56, 59, 238),
+                          ),
+                          showIcon: false,
+                          titleAlign: TextAlign.left,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const FormAlatPage()),
+                            );
+                          },
                         ),
-                        iconPosition: IconPosition.left,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const GuruPage()),
-                      );
-                    },
-                  ),
-                  CustomCard(
-                    width: 180,
-                    height: 60,
-                    title: "Profil Admin",
-                    backgroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 7),
-                    borderColor: Colors.lightBlue,
-                    titleStyle: const TextStyle(
-                      fontFamily: "Inter",
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color.fromARGB(255, 56, 59, 238),
+                      ],
                     ),
-                    customIcon: const Icon(Icons.manage_accounts, color: Color(0xFF2563EB), size: 36),
-                    iconPosition: IconPosition.left,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ProfilScreen()),
-                      );
-                    },
                   ),
               ],
             ),

@@ -104,7 +104,7 @@ class _FormGuruPageState extends State<FormGuruPage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: ListView(
           children: [
             // NIK
@@ -115,12 +115,17 @@ class _FormGuruPageState extends State<FormGuruPage> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintText: "Masukkan NIK Guru",
+                hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
                 filled: true,
-                fillColor: Colors.grey[200],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                fillColor: const Color(0xFFF1F5F9),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
             ),
@@ -133,12 +138,17 @@ class _FormGuruPageState extends State<FormGuruPage> {
               controller: namaController,
               decoration: InputDecoration(
                 hintText: "Nama Lengkap Guru",
+                hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
                 filled: true,
-                fillColor: Colors.grey[200],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                fillColor: const Color(0xFFF1F5F9),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
             ),
@@ -151,30 +161,96 @@ class _FormGuruPageState extends State<FormGuruPage> {
               controller: bidangController,
               decoration: InputDecoration(
                 hintText: "Contoh: Matematika",
+                hintStyle: const TextStyle(color: Color(0xFFC4C4C4)),
                 filled: true,
-                fillColor: Colors.grey[200],
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                fillColor: const Color(0xFFF1F5F9),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
                 ),
               ),
             ),
             const SizedBox(height: 16),
 
-            // Wali Kelas
+            // Pilih sebagai
+            const Text("Pilih sebagai"),
+            const SizedBox(height: 6),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Wali Kelas", style: TextStyle(fontWeight: FontWeight.w600)),
-                Switch(
-                  value: isWali,
-                  activeColor: const Color(0xFF2563EB),
-                  onChanged: (val) {
-                    setState(() {
-                      isWali = val;
-                    });
-                  },
+                Card(
+                  color: const Color(0xFFF1F5F9),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      setState(() {
+                        isWali = true;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text("Wali Kelas", style: TextStyle(fontWeight: FontWeight.w600)),
+                          Checkbox(
+                            value: isWali,
+                            activeColor: const Color(0xFF2563EB),
+                            onChanged: (val) {
+                              setState(() {
+                                isWali = true;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Card(
+                  color: const Color(0xFFF1F5F9),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(color: Color(0xFFE2E8F0)),
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      setState(() {
+                        isWali = false;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text("Guru", style: TextStyle(fontWeight: FontWeight.w600)),
+                          Checkbox(
+                            value: !isWali,
+                            activeColor: const Color(0xFF2563EB),
+                            onChanged: (val) {
+                              setState(() {
+                                isWali = false;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
